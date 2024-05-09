@@ -15,7 +15,8 @@ builder.Services.Configure<MongoDBSettings>(options =>
 {
     options.ConnectionURI = Environment.GetEnvironmentVariable("ConnectionURI");
     options.DatabaseName = Environment.GetEnvironmentVariable("DatabaseName");
-    options.CollectionName = Environment.GetEnvironmentVariable("CollectionName");
+    options.CatalogCollectionName = Environment.GetEnvironmentVariable("CatalogCollectionName");
+    options.ExtendedCatalogCollectionName = Environment.GetEnvironmentVariable("ExtendedCatalogCollectionName");
 });
 
 builder.Services.AddSingleton<ICatalogRepository, CatalogRepository>();

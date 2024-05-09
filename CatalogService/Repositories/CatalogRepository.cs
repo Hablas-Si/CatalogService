@@ -1,42 +1,51 @@
-using System.Collections.Generic;
+using System;
+using System.Threading.Tasks;
 using Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-
-
 
 namespace CatalogService.Repository
 {
     public class CatalogRepository : ICatalogRepository
     {
+        private readonly IMongoCollection<Catalog> _catalogCollection;
+        private readonly IMongoCollection<ExtendedCatalog> _extendedCatalogCollection;
 
-        private readonly IMongoCollection<Catalog> _catalog;
-
-          public CatalogRepository(IOptions<MongoDBSettings> mongoDBSettings)
+        public CatalogRepository(IOptions<MongoDBSettings> mongoDBSettings)
         {
-            // trækker connection string og database navn og collectionname fra program.cs aka fra terminalen ved export. Dette er en constructor injection.
             MongoClient client = new MongoClient(mongoDBSettings.Value.ConnectionURI);
             IMongoDatabase database = client.GetDatabase(mongoDBSettings.Value.DatabaseName);
-            _catalog = database.GetCollection<Catalog>(mongoDBSettings.Value.CollectionName);
+            _catalogCollection = database.GetCollection<Catalog>(mongoDBSettings.Value.CatalogCollectionName);
+            _extendedCatalogCollection = database.GetCollection<ExtendedCatalog>(mongoDBSettings.Value.ExtendedCatalogCollectionName);
+        }
 
+        public async Task CreateCatalogAndExtendedCatalogAsync(Catalog newCatalog)
+        {
+            // Opret Catalog
+            await _catalogCollection.InsertOneAsync(newCatalog);
+
+            // Opret ExtendedCatalog med reference til Catalog
+            ExtendedCatalog newExtendedCatalog = new ExtendedCatalog
+            {
+                Id = Guid.NewGuid(),
+                CatalogId = newCatalog.Id,
+                Date = DateTime.UtcNow,
+                Seller = "Default Seller", // Du kan indsætte de ønskede værdier her
+                Buyer = "Default Buyer"    // Du kan indsætte de ønskede værdier her
+            };
+
+            await _extendedCatalogCollection.InsertOneAsync(newExtendedCatalog);
         }
 
 
-        public IEnumerable<Catalog> getAll()
+        public Task<IEnumerable<ExtendedCatalog>> getAll()
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Catalog> getItem(int itemId)
+        public Task<ExtendedCatalog> getItem(int itemId)
         {
-            return await _catalog.Find(c => c.ItemId == itemId).FirstOrDefaultAsync();
+            throw new NotImplementedException();
         }
-
-        public async Task createItemAsync(Catalog newItem)
-        {
-            await _catalog.InsertOneAsync(newItem);
-        }
-     
-      
     }
 }
