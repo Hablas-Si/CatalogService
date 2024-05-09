@@ -1,5 +1,17 @@
+using Models;
+using CatalogService.Repository;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<MongoDBSettings>(options =>
+{
+    options.ConnectionURI = Environment.GetEnvironmentVariable("ConnectionURI");
+    options.DatabaseName = Environment.GetEnvironmentVariable("DatabaseName");
+    options.CollectionName = Environment.GetEnvironmentVariable("CollectionName");
+});
+
+builder.Services.AddSingleton<ICatalogRepository, CatalogRepository>();
 // Add services to the container.
 
 builder.Services.AddControllers();
