@@ -26,7 +26,7 @@ namespace CatalogService.Controllers
         }
 
 
-         [HttpGet("{itemId}")]
+        [HttpGet("{itemId}")]
         public async Task<IActionResult> getSpecificItem(int itemId)
         {
             try
@@ -60,5 +60,46 @@ namespace CatalogService.Controllers
             await _service.CreateCatalog(newItem);
             return Ok(newItem);
         }
+
+        [HttpPut("{itemId}")]
+        public async Task<IActionResult> UpdateCatalogAndExtended(int itemId, Catalog updatedCatalog)
+        {
+            try
+            {
+                await _service.UpdateCatalog(itemId, updatedCatalog);
+
+                return Ok("Catalog and ExtendedCatalog updated successfully.");
+            }
+            catch (CatalogNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpDelete("{itemId}")]
+        public async Task<IActionResult> DeleteCatalog(int itemId, Guid catalogId)
+        {
+            try
+            {
+                // Slet kataloget
+                await _service.DeleteCatalog(itemId);
+
+                // Slet den tilknyttede extended catalog
+
+                return Ok("Catalog and associated ExtendedCatalog deleted successfully.");
+            }
+            catch (CatalogNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+
+
+
+
+
+
+
     }
 }

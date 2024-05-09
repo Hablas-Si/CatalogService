@@ -11,7 +11,9 @@ namespace CatalogService.Repository
         Task<IEnumerable<Catalog>> getAll();
         Task<Catalog> getSpecificItem(int itemId);
         Task CreateCatalog(Catalog newItem);
-        Task CreateExtendedCatalog(Catalog newCatalog);
+
+        Task UpdateCatalog(int itemId, Catalog updatedItem);
+        Task DeleteCatalog(int itemId);
 
 
     }

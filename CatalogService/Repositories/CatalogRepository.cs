@@ -10,14 +10,12 @@ namespace CatalogService.Repository
     public class CatalogRepository : ICatalogRepository
     {
         private readonly IMongoCollection<Catalog> _catalogCollection;
-        private readonly IMongoCollection<Catalog.ExtendedCatalogInfo> _extendedcatalogCollection;
 
         public CatalogRepository(IOptions<MongoDBSettings> mongoDBSettings)
         {
             MongoClient client = new MongoClient(mongoDBSettings.Value.ConnectionURI);
             IMongoDatabase database = client.GetDatabase(mongoDBSettings.Value.DatabaseName);
             _catalogCollection = database.GetCollection<Catalog>(mongoDBSettings.Value.CatalogCollectionName);
-            _extendedcatalogCollection = database.GetCollection<Catalog.ExtendedCatalogInfo>(mongoDBSettings.Value.ExtendedCatalogCollectionName);
         }
 
 
@@ -26,26 +24,9 @@ namespace CatalogService.Repository
         {
             await _catalogCollection.InsertOneAsync(newCatalog);
             // Opret ExtendedCatalog med reference til Catalog
-            await CreateExtendedCatalog(newCatalog);
 
         }
 
-        public async Task CreateExtendedCatalog(Catalog newCatalog)
-        {
-
-            Catalog.ExtendedCatalogInfo newExtendedCatalog = new Catalog.ExtendedCatalogInfo
-            {
-                CatalogId = newCatalog.Id,
-                Id = Guid.NewGuid(),
-                SoldDate = DateTime.UtcNow,
-                AuctionAdmin = "Default Admin",
-                Seller = "Default Seller", // Du kan indsætte de ønskede værdier her
-                Buyer = "Default Buyer"   // Du kan indsætte de ønskede værdier her
-            };
-
-            // Opret ExtendedCatalog
-            await _extendedcatalogCollection.InsertOneAsync(newExtendedCatalog);
-        }
 
         public async Task<IEnumerable<Catalog>> getAll()
         {
@@ -58,9 +39,6 @@ namespace CatalogService.Repository
             // Gennemgå hvert Catalog-objekt og hent tilhørende ExtendedCatalog-objekt baseret på CatalogId
             foreach (var catalog in catalogs)
             {
-                var extendedCatalog = await _extendedcatalogCollection.Find(ec => ec.CatalogId == catalog.Id).FirstOrDefaultAsync();
-                catalog.ExtendedCatalog = extendedCatalog;
-
                 // Tilføj catalog til den nye liste
                 catalogList.Add(catalog);
             }
@@ -80,10 +58,6 @@ namespace CatalogService.Repository
                     throw new CatalogNotFoundException();
                 }
 
-                // Søg efter tilhørende ExtendedCatalog baseret på CatalogId
-                var extendedCatalog = await _extendedcatalogCollection.Find(ec => ec.CatalogId == catalogItem.Id).FirstOrDefaultAsync();
-                catalogItem.ExtendedCatalog = extendedCatalog;
-
                 return catalogItem;
             }
             catch (CatalogNotFoundException)
@@ -94,6 +68,50 @@ namespace CatalogService.Repository
             {
                 // Håndter eventuelle andre undtagelser her, f.eks. logning eller yderligere fejlhåndtering
                 throw new Exception("An error occurred while retrieving the item from the catalog.", ex);
+            }
+        }
+
+
+        public async Task DeleteCatalog(int itemId)
+        {
+            try
+            {
+                // Find det katalog, der skal slettes baseret på ItemId
+                var filter = Builders<Catalog>.Filter.Eq(c => c.ItemId, itemId);
+
+                // Slet kataloget
+                await _catalogCollection.DeleteOneAsync(filter);
+            }
+            catch (Exception ex)
+            {
+                // Håndter eventuelle undtagelser her
+                throw new Exception("An error occurred while deleting the catalog.", ex);
+            }
+        }
+        public async Task UpdateCatalog(int itemId, Catalog updatedItem)
+        {
+            try
+            {
+                // Opret filter til at finde det katalogelement, der skal opdateres
+                var filter = Builders<Catalog>.Filter.Eq(c => c.ItemId, itemId);
+
+                // Opret opdatering med de opdaterede oplysninger, inklusive den udvidede kataloginfo
+                var update = Builders<Catalog>.Update
+                    .Set(c => c.Name, updatedItem.Name)
+                    .Set(c => c.Description, updatedItem.Description)
+                    .Set(c => c.Price, updatedItem.Price)
+                    .Set(c => c.ExtendedCatalog.SoldDate, updatedItem.ExtendedCatalog.SoldDate)
+                    .Set(c => c.ExtendedCatalog.AuctionAdmin, updatedItem.ExtendedCatalog.AuctionAdmin)
+                    .Set(c => c.ExtendedCatalog.Seller, updatedItem.ExtendedCatalog.Seller)
+                    .Set(c => c.ExtendedCatalog.Buyer, updatedItem.ExtendedCatalog.Buyer);
+
+                // Udfør opdateringen i MongoDB
+                await _catalogCollection.UpdateOneAsync(filter, update);
+            }
+            catch (Exception ex)
+            {
+                // Håndter eventuelle undtagelser her
+                throw new Exception("An error occurred while updating the catalog item.", ex);
             }
         }
 
