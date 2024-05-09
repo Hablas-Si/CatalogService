@@ -12,7 +12,7 @@ namespace CatalogService.Repository
 
         private readonly IMongoCollection<Catalog> _catalog;
 
-          public CatalogRepository(IOptions<MongoDBSettings> mongoDBSettings, ICatalogRepository catalogService)
+          public CatalogRepository(IOptions<MongoDBSettings> mongoDBSettings)
         {
             // trækker connection string og database navn og collectionname fra program.cs aka fra terminalen ved export. Dette er en constructor injection.
             MongoClient client = new MongoClient(mongoDBSettings.Value.ConnectionURI);
