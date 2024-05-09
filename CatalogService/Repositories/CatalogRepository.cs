@@ -29,7 +29,7 @@ namespace CatalogService.Repository
             {
                 Id = Guid.NewGuid(),
                 CatalogId = newCatalog.Id,
-                Date = DateTime.UtcNow,
+                SoldDate = DateTime.UtcNow,
                 Seller = "Default Seller", // Du kan indsætte de ønskede værdier her
                 Buyer = "Default Buyer"    // Du kan indsætte de ønskede værdier her
             };
