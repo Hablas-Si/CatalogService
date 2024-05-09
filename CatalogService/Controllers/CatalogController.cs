@@ -47,7 +47,7 @@ namespace CatalogService.Controllers
                 return BadRequest("Item cannot be null");
             }
 
-            await _service.createItemAsync(newItem);
+            await _service.CreateCatalogAndExtendedCatalogAsync(newItem);
             return Ok(newItem);
         }
     }
