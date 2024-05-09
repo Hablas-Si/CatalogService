@@ -26,16 +26,25 @@ namespace CatalogService.Controllers
         }
 
 
-        [HttpGet("{itemId}")]
-        public IActionResult getItem(int itemId)
+         [HttpGet("{itemId}")]
+        public async Task<IActionResult> getSpecificItem(int itemId)
         {
             try
             {
-                var item = _service.getItem(itemId);
-                return Ok(item);
+                var item = await _service.getSpecificItem(itemId);
+                if (item != null)
+                {
+                    return Ok(item);
+                }
+                else
+                {
+                    return NotFound("Item not found."); // Returnerer 404 NotFound
+                }
             }
             catch (CatalogNotFoundException ex)
             {
+                // Log eventuelle fejl
+                _logger.LogError(ex, "An error occurred while fetching item with ID: {ItemId}", itemId);
                 return NotFound(ex.Message); // Returnerer 404 NotFound
             }
         }
