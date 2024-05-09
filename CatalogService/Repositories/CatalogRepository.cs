@@ -45,10 +45,6 @@ public async Task CreateExtendedCatalog(Catalog newCatalog){
         await _extendedcatalogCollection.InsertOneAsync(newExtendedCatalog);
 }
 
-
-
-
-
   public async Task<IEnumerable<Catalog>> getAll()
 {
     // Hent alle Catalog-objekter
@@ -69,7 +65,6 @@ public async Task CreateExtendedCatalog(Catalog newCatalog){
 
     return catalogList;
 }
-
 
 
 
