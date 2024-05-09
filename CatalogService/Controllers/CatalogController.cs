@@ -21,6 +21,7 @@ namespace CatalogService.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> getAll()
         {
+            _logger.LogInformation("Fetching all items from catalog");
             var catalogList = await _service.getAll();
             return Ok(catalogList);
         }
@@ -29,6 +30,7 @@ namespace CatalogService.Controllers
         [HttpGet("{itemId}")]
         public async Task<IActionResult> getSpecificItem(int itemId)
         {
+            _logger.LogInformation("Fetching item with ID: {ItemId}", itemId);
             try
             {
                 var item = await _service.getSpecificItem(itemId);
@@ -52,6 +54,7 @@ namespace CatalogService.Controllers
         [HttpPost]
         public async Task<IActionResult> createItem(Catalog newItem)
         {
+            _logger.LogInformation("Creating new item in catalog");
             if (newItem == null)
             {
                 return BadRequest("Item cannot be null");
@@ -64,6 +67,7 @@ namespace CatalogService.Controllers
         [HttpPut("{itemId}")]
         public async Task<IActionResult> UpdateCatalogAndExtended(int itemId, Catalog updatedCatalog)
         {
+            _logger.LogInformation("Updating catalog and extended catalog with ID: {ItemId}", itemId);
             try
             {
                 await _service.UpdateCatalog(itemId, updatedCatalog);
@@ -77,8 +81,9 @@ namespace CatalogService.Controllers
         }
 
         [HttpDelete("{itemId}")]
-        public async Task<IActionResult> DeleteCatalog(int itemId, Guid catalogId)
+        public async Task<IActionResult> DeleteCatalog(int itemId)
         {
+            _logger.LogWarning("Deleting catalog with ID: {ItemId}", itemId);
             try
             {
                 // Slet kataloget

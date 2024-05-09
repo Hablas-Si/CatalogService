@@ -10,6 +10,7 @@ namespace Models
         public string? Description { get; set; }
         public decimal? Price { get; set; }
 
+        public string? ImageUrl { get; set; }
         public bool? ProductAvailable { get; set; }
 
         public ExtendedCatalogInfo? ExtendedCatalog { get; set; }
