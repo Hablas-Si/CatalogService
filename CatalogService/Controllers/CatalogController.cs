@@ -18,12 +18,13 @@ namespace CatalogService.Controllers
             this._service = service;
         }
 
-        [HttpGet]
-        public IActionResult getAll()
+        [HttpGet("all")]
+        public async Task<IActionResult> getAll()
         {
-            var list = _service.getAll();
-            return Ok(list);
+            var catalogList = await _service.getAll();
+            return Ok(catalogList);
         }
+
 
         [HttpGet("{itemId}")]
         public IActionResult getItem(int itemId)
@@ -47,7 +48,7 @@ namespace CatalogService.Controllers
                 return BadRequest("Item cannot be null");
             }
 
-            await _service.CreateCatalogAndExtendedCatalogAsync(newItem);
+            await _service.CreateCatalog(newItem);
             return Ok(newItem);
         }
     }
