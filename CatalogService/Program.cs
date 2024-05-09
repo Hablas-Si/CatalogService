@@ -1,8 +1,15 @@
 using Models;
 using CatalogService.Repository;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Bson;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+// BsonSeralizer... fortæller at hver gang den ser en Guid i alle entiteter skal den serializeres til en string. 
+BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
+
 
 builder.Services.Configure<MongoDBSettings>(options =>
 {

@@ -1,1 +1,3 @@
-export ConnectionURI=mongodb+srv://admin:admin@auctionhouse.dfo2bcd.mongodb.net/ export DatabaseName=Catalog export CollectionName=Catalog
+export ConnectionURI=mongodb+srv://admin:admin@auctionhouse.dfo2bcd.mongodb.net/ 
+export DatabaseName=Catalog
+export CollectionName=Catalog

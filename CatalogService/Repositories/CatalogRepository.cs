@@ -32,9 +32,9 @@ namespace CatalogService.Repository
             return await _catalog.Find(c => c.ItemId == itemId).FirstOrDefaultAsync();
         }
 
-        public Task createItemAsync(Catalog newItem)
+        public async Task createItemAsync(Catalog newItem)
         {
-            throw new NotImplementedException();
+            await _catalog.InsertOneAsync(newItem);
         }
      
       
