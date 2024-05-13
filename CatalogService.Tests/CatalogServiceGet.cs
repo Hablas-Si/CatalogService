@@ -20,14 +20,14 @@ namespace CatalogService.Tests.CatalogGetService
         public CatalogServiceGetTests()
         {
             _itemServiceMock = new Mock<ICatalogRepository>();
-            var loggerMock = new Mock<ILogger<CatalogController>>(); // Add this line
-               _itemServiceMock.Setup(x =>  x.getItem(-1))
+            var loggerMock = new Mock<ILogger<CatalogController>>();
+            _itemServiceMock.Setup(x => x.getItem(-1))
                 .Returns(() => throw new CatalogNotFoundException());
-            _controller = new CatalogController(loggerMock.Object, _itemServiceMock.Object); // Update this line
-            _items = new List<Catalog> { 
-                new Catalog { Id = ObjectId.GenerateNewId().ToString(), Name = "Item 1", Price = 10 },
-                new Catalog { Id = ObjectId.GenerateNewId().ToString(), Name = "Item 2", Price = 20 },
-                new Catalog { Id = ObjectId.GenerateNewId().ToString(), Name = "Item 3", Price = 30 }
+            _controller = new CatalogController(loggerMock.Object, _itemServiceMock.Object);
+            _items = new List<Catalog> {
+                new Catalog { Id = Guid.NewGuid(), Name = "Item 1", Price = 10 },
+                new Catalog { Id = Guid.NewGuid(), Name = "Item 2", Price = 20 },
+                new Catalog { Id = Guid.NewGuid(), Name = "Item 3", Price = 30 }
             };
         }
 
