@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using CatalogService.Repository;
 using Models;
-using CatalogService.Exceptions;
 
 namespace CatalogService.Controllers
 {
@@ -40,10 +39,11 @@ namespace CatalogService.Controllers
                 }
                 else
                 {
+                    _logger.LogWarning("Item with ID: {ItemId} not found", itemId);
                     return NotFound("Item not found."); // Returnerer 404 NotFound
                 }
             }
-            catch (CatalogNotFoundException ex)
+            catch (Exception ex)
             {
                 // Log eventuelle fejl
                 _logger.LogError(ex, "An error occurred while fetching item with ID: {ItemId}", itemId);
@@ -57,6 +57,7 @@ namespace CatalogService.Controllers
             _logger.LogInformation("Creating new item in catalog");
             if (newItem == null)
             {
+                _logger.LogWarning("Item cannot be null");
                 return BadRequest("Item cannot be null");
             }
 
@@ -74,8 +75,8 @@ namespace CatalogService.Controllers
 
                 return Ok("Catalog and ExtendedCatalog updated successfully.");
             }
-            catch (CatalogNotFoundException ex)
-            {
+            catch (Exception ex)
+            {   _logger.LogError(ex, "An error occurred while updating catalog and extended catalog with ID: {ItemId}", itemId);
                 return NotFound(ex.Message);
             }
         }
@@ -83,9 +84,9 @@ namespace CatalogService.Controllers
         [HttpDelete("{itemId}")]
         public async Task<IActionResult> DeleteCatalog(int itemId)
         {
-            _logger.LogWarning("Deleting catalog with ID: {ItemId}", itemId);
             try
             {
+                _logger.LogWarning("Deleting catalog with ID: {ItemId}", itemId);
                 // Slet kataloget
                 await _service.DeleteCatalog(itemId);
 
@@ -93,8 +94,9 @@ namespace CatalogService.Controllers
 
                 return Ok("Catalog and associated ExtendedCatalog deleted successfully.");
             }
-            catch (CatalogNotFoundException ex)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "An error occurred while deleting catalog with ID: {ItemId}", itemId);
                 return NotFound(ex.Message);
             }
         }

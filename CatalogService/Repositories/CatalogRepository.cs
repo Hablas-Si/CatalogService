@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using CatalogService.Exceptions;
 
 namespace CatalogService.Repository
 {
@@ -55,19 +54,14 @@ namespace CatalogService.Repository
                 var catalogItem = await _catalogCollection.Find(c => c.ItemId == itemId).FirstOrDefaultAsync();
                 if (catalogItem == null)
                 {
-                    throw new CatalogNotFoundException();
+                    throw new Exception();
                 }
 
                 return catalogItem;
             }
-            catch (CatalogNotFoundException)
-            {
-                throw; // Kast undtagelsen videre, hvis kataloget ikke blev fundet
-            }
             catch (Exception ex)
             {
-                // Håndter eventuelle andre undtagelser her, f.eks. logning eller yderligere fejlhåndtering
-                throw new Exception("An error occurred while retrieving the item from the catalog.", ex);
+                throw; // Kast undtagelsen videre, hvis kataloget ikke blev fundet
             }
         }
 
