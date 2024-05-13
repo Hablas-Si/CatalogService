@@ -101,17 +101,26 @@ namespace CatalogService.Controllers
             try
             {
                 _logger.LogWarning("Deleting catalog with ID: {ItemId}", itemId);
+
+                // Check if the item exists
+                var existingItem = await _service.getSpecificItem(itemId);
+
+
+                if (existingItem == null)
+                {
+                    _logger.LogError("Catalog not found with ID: {ItemId}", itemId);
+                    return NotFound("Catalog not found");
+                }
+
                 // Slet kataloget
                 await _service.DeleteCatalog(itemId);
-
-                // Slet den tilknyttede extended catalog
 
                 return Ok("Catalog and associated ExtendedCatalog deleted successfully.");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while deleting catalog with ID: {ItemId}", itemId);
-                return NotFound(ex.Message);
+                return StatusCode(500, "An error occurred while processing your request.");
             }
         }
 

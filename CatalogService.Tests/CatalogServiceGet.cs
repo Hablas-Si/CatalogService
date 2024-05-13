@@ -16,7 +16,7 @@ namespace CatalogService.Tests.CatalogGetService
     {
         private CatalogController _controller;
         private static Mock<ICatalogRepository> _itemServiceMock;
-        private List<Catalog> _items;
+        //private List<Catalog> _items;
 
         [TestInitialize]
         public void Setup()
@@ -24,12 +24,12 @@ namespace CatalogService.Tests.CatalogGetService
             _itemServiceMock = new Mock<ICatalogRepository>();
             var loggerMock = new Mock<ILogger<CatalogController>>();
             _controller = new CatalogController(loggerMock.Object, _itemServiceMock.Object);
-
-            _items = new List<Catalog> {
-                new Catalog { Id = Guid.NewGuid(), Name = "Item 1", Price = 10, Description = "Description 1"},
-                new Catalog { Id = Guid.NewGuid(), Name = "Item 2", Price = 20, Description = "Description 2"},
-                new Catalog { Id = Guid.NewGuid(), Name = "Item 3", Price = 30, Description = "Description 3"}
-            };
+            //_items bruger vi vidst ikke længere, men er i tvivl om vi brugte det under TDD?
+            //_items = new List<Catalog> {
+            //    new Catalog { Id = Guid.NewGuid(), Name = "Item 1", Price = 10, Description = "Description 1"},
+            //    new Catalog { Id = Guid.NewGuid(), Name = "Item 2", Price = 20, Description = "Description 2"},
+            //    new Catalog { Id = Guid.NewGuid(), Name = "Item 3", Price = 30, Description = "Description 3"}
+            //};
         }
 
         //Kalder getAll, og checker at det ikke er null - Failer indtil getAll implementeres

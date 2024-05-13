@@ -15,8 +15,7 @@ namespace CatalogService.Tests.CatalogGetService
     public class CatalogServicePostTests
     {
         private CatalogController _controller;
-        private static Mock<ICatalogRepository> _itemServiceMock;
-        private List<Catalog> _items;
+        private Mock<ICatalogRepository> _itemServiceMock;
 
         [TestInitialize]
         public void Setup()
