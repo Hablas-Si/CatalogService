@@ -17,13 +17,14 @@ namespace CatalogService.Tests.CatalogGetService
         private CatalogController _controller;
         private static Mock<ICatalogRepository> _itemServiceMock;
         private List<Catalog> _items;
-        public CatalogServiceGetTests()
+
+        [TestInitialize]
+        public void Setup()
         {
             _itemServiceMock = new Mock<ICatalogRepository>();
-            var loggerMock = new Mock<ILogger<CatalogController>>(); // Add this line
-            _itemServiceMock.Setup(x => x.getSpecificItem(-1))
-             .Returns(() => throw new CatalogNotFoundException());
-            _controller = new CatalogController(loggerMock.Object, _itemServiceMock.Object); // Update this line
+            var loggerMock = new Mock<ILogger<CatalogController>>();
+            _controller = new CatalogController(loggerMock.Object, _itemServiceMock.Object);
+
             _items = new List<Catalog> {
                 new Catalog { Id = Guid.NewGuid(), Name = "Item 1", Price = 10, Description = "Description 1"},
                 new Catalog { Id = Guid.NewGuid(), Name = "Item 2", Price = 20, Description = "Description 2"},
@@ -31,39 +32,32 @@ namespace CatalogService.Tests.CatalogGetService
             };
         }
 
+        //Kalder getAll, og checker at det ikke er null - Failer indtil getAll implementeres
         [TestMethod]
-        public void ItExist()
+        public void GetAll_NotNull()
         {
-            // Arrange
-            var itemServiceMock = new Mock<ICatalogRepository>();
-            var loggerMock = new Mock<ILogger<CatalogController>>();
-            var controller = new CatalogController(loggerMock.Object, itemServiceMock.Object);
-
+            
             // Act
-            var result = controller.getAll();
+            var result = _controller.getAll();
 
             // Assert
             Assert.IsNotNull(result);
         }
-
+        // Tester om getAll returnerer et OkObjectResult
         [TestMethod]
         public async Task GetAll_ReturnsOkObjectResult()
         {
-            // Arrange
-            var itemServiceMock = new Mock<ICatalogRepository>();
-            var loggerMock = new Mock<ILogger<CatalogController>>();
-            var controller = new CatalogController(loggerMock.Object, itemServiceMock.Object);
-
+            
             // Act
-            var result = await controller.getAll(); // Afvent resultatet
+            var result = await _controller.getAll(); // Afvent resultatet
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult)); // Kontroller typen af resultatet
         }
 
-
+        // Tester om getAll returnerer en samling af varer
         [TestMethod]
-        public async Task ReturnCollectionOfItems()
+        public async Task GetAll_ReturnsCollection()
         {
             // Act
             var result = await _controller.getAll() as OkObjectResult;
@@ -74,6 +68,7 @@ namespace CatalogService.Tests.CatalogGetService
             Assert.IsInstanceOfType<IEnumerable<Catalog>>(result.Value);
         }
 
+        // Tjekker om getAll-metoden på repositoryservicen kaldes en gang
         [TestMethod]
         public void ItCallGetSummariesServiceOnce()
         {
@@ -84,14 +79,14 @@ namespace CatalogService.Tests.CatalogGetService
             _itemServiceMock.Verify(mock => mock.getAll(), Times.Once);
 
         }
-
+        //Test for at der er en exception hvis item ikke kan findes - Failer indtil denne fejlmeddelse implementeres
         [TestMethod]
-        public async Task GivenCatalogNotFoundExceptionThenNotFoundObjectReuslt()
+        public async Task GivenCatalogNotFoundExceptionThenNotFoundObjectResult()
         {
             var result = await _controller.getSpecificItem(-1) as NotFoundObjectResult;
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("Catalog Not Found", result.Value);
+            Assert.AreEqual("Item not found", result.Value);
         }
     }
 }
