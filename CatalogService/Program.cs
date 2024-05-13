@@ -26,8 +26,6 @@ BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
 builder.Services.Configure<MongoDBSettings>(options =>
 {
     options.ConnectionURI = Environment.GetEnvironmentVariable("ConnectionURI");
-    options.DatabaseName = Environment.GetEnvironmentVariable("DatabaseName");
-    options.CatalogCollectionName = Environment.GetEnvironmentVariable("CatalogCollectionName");
 });
 
 builder.Services.AddSingleton<ICatalogRepository, CatalogRepository>();
