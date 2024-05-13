@@ -9,9 +9,12 @@ namespace CatalogService.Repository
     public interface ICatalogRepository
     {
         Task<IEnumerable<Catalog>> getAll();
-        Task<Catalog> getItem(int itemId);
+        Task<Catalog> getSpecificItem(int itemId);
         Task CreateCatalog(Catalog newItem);
-        Task CreateExtendedCatalog(Catalog newCatalog);
+
+        Task UpdateCatalog(int itemId, Catalog updatedItem);
+        Task DeleteCatalog(int itemId);
+
 
     }
 }

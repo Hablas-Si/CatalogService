@@ -10,6 +10,9 @@ namespace Models
         public string? Description { get; set; }
         public decimal? Price { get; set; }
 
+        public string? ImageUrl { get; set; }
+        public bool? ProductAvailable { get; set; }
+
         public ExtendedCatalogInfo? ExtendedCatalog { get; set; }
 
 
@@ -17,8 +20,6 @@ namespace Models
         // Indre klasse for ExtendedCatalog
         public class ExtendedCatalogInfo
         {
-            public Guid Id { get; set; }
-            public Guid CatalogId { get; set; }
             public DateTime? SoldDate { get; set; }
             public string? AuctionAdmin { get; set; }
             public string? Seller { get; set; }
