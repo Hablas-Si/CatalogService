@@ -40,7 +40,7 @@ namespace CatalogService.Controllers
                 else
                 {
                     _logger.LogWarning("Item with ID: {ItemId} not found", itemId);
-                    return NotFound("Item not found."); // Returnerer 404 NotFound
+                    return NotFound("Item not found"); // Returnerer 404 NotFound
                 }
             }
             catch (Exception ex)
