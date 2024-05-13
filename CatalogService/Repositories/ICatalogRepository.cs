@@ -8,8 +8,13 @@ namespace CatalogService.Repository
 {
     public interface ICatalogRepository
     {
-        Task<IEnumerable<ExtendedCatalog>> getAll();
-        Task<ExtendedCatalog> getItem(int itemId);
-        Task CreateCatalogAndExtendedCatalogAsync(Catalog newItem);
+        Task<IEnumerable<Catalog>> getAll();
+        Task<Catalog> getSpecificItem(int itemId);
+        Task CreateCatalog(Catalog newItem);
+
+        Task UpdateCatalog(int itemId, Catalog updatedItem);
+        Task DeleteCatalog(int itemId);
+
+
     }
 }

@@ -3,9 +3,21 @@ using CatalogService.Repository;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Bson;
+using Serilog;
+using Microsoft.Extensions.Configuration;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+Console.WriteLine("Initializing Serilog...");
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration) // Konfigurér Serilog fra appsettings.json
+    .CreateLogger();
+Console.WriteLine("Serilog initialized.");
+
+
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 // BsonSeralizer... fortæller at hver gang den ser en Guid i alle entiteter skal den serializeres til en string. 
 BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
@@ -16,7 +28,6 @@ builder.Services.Configure<MongoDBSettings>(options =>
     options.ConnectionURI = Environment.GetEnvironmentVariable("ConnectionURI");
     options.DatabaseName = Environment.GetEnvironmentVariable("DatabaseName");
     options.CatalogCollectionName = Environment.GetEnvironmentVariable("CatalogCollectionName");
-    options.ExtendedCatalogCollectionName = Environment.GetEnvironmentVariable("ExtendedCatalogCollectionName");
 });
 
 builder.Services.AddSingleton<ICatalogRepository, CatalogRepository>();
@@ -27,7 +38,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+
 var app = builder.Build();
+
+
+    app.UseSerilogRequestLogging();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -38,8 +54,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();
