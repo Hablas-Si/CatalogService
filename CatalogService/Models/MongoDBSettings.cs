@@ -8,9 +8,8 @@ namespace Models
     public class MongoDBSettings
     {
         public string ConnectionURI { get; set; } = null!;
-        public string DatabaseName { get; set; } = null!;
-        public string CatalogCollectionName { get; set; } = null!;
-        public string ExtendedCatalogCollectionName { get; set; } = null!;
+        public string DatabaseName { get; set; } = "Catalog";
+        public string CatalogCollectionName { get; set; } = "Catalog";
     }
 
 }
