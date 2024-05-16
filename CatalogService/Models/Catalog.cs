@@ -16,15 +16,15 @@ namespace Models
         public ExtendedCatalogInfo? ExtendedCatalog { get; set; }
 
 
+    }
 
-        // Indre klasse for ExtendedCatalog
-        public class ExtendedCatalogInfo
-        {
-            public DateTime StartDate { get; set; }
-            public DateTime SoldDate { get; set; }
-            public string? AuctionAdmin { get; set; }
-            public string? Seller { get; set; }
-            public string? Buyer { get; set; }
-        }
+    // Indre klasse for ExtendedCatalog
+    public class ExtendedCatalogInfo
+    {
+        public DateTime StartDate { get; set; }
+        public DateTime SoldDate { get; set; }
+        public string? AuctionAdmin { get; set; }
+        public string? Seller { get; set; }
+        public string? Buyer { get; set; }
     }
 }
