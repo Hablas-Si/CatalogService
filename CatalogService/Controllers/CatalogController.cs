@@ -26,27 +26,27 @@ namespace CatalogService.Controllers
         }
 
 
-        [HttpGet("{itemId}")]
-        public async Task<IActionResult> getSpecificItem(int itemId)
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> getSpecificItem(Guid Id)
         {
-            _logger.LogInformation("Fetching item with ID: {ItemId}", itemId);
+            _logger.LogInformation("Fetching item with ID: {Id}", Id);
             try
             {
-                var item = await _service.getSpecificItem(itemId);
+                var item = await _service.getSpecificItem(Id);
                 if (item != null)
                 {
                     return Ok(item);
                 }
                 else
                 {
-                    _logger.LogWarning("Item with ID: {ItemId} not found", itemId);
+                    _logger.LogWarning("Item with ID: {Id} not found", Id);
                     return NotFound("Item not found."); // Returnerer 404 NotFound
                 }
             }
             catch (Exception ex)
             {
                 // Log eventuelle fejl
-                _logger.LogError(ex, "An error occurred while fetching item with ID: {ItemId}", itemId);
+                _logger.LogError(ex, "An error occurred while fetching item with ID: {Id}", Id);
                 return NotFound(ex.Message); // Returnerer 404 NotFound
             }
         }
@@ -65,30 +65,30 @@ namespace CatalogService.Controllers
             return Ok(newItem);
         }
 
-        [HttpPut("{itemId}")]
-        public async Task<IActionResult> UpdateCatalogAndExtended(int itemId, Catalog updatedCatalog)
+        [HttpPut("{Id}")]
+        public async Task<IActionResult> UpdateCatalogAndExtended(Guid Id, Catalog updatedCatalog)
         {
-            _logger.LogInformation("Updating catalog and extended catalog with ID: {ItemId}", itemId);
+            _logger.LogInformation("Updating catalog and extended catalog with ID: {Id}", Id);
             try
             {
-                await _service.UpdateCatalog(itemId, updatedCatalog);
+                await _service.UpdateCatalog(Id, updatedCatalog);
 
                 return Ok("Catalog and ExtendedCatalog updated successfully.");
             }
             catch (Exception ex)
-            {   _logger.LogError(ex, "An error occurred while updating catalog and extended catalog with ID: {ItemId}", itemId);
+            {   _logger.LogError(ex, "An error occurred while updating catalog and extended catalog with ID: {Id}", Id);
                 return NotFound(ex.Message);
             }
         }
 
-        [HttpDelete("{itemId}")]
-        public async Task<IActionResult> DeleteCatalog(int itemId)
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> DeleteCatalog(Guid Id)
         {
             try
             {
-                _logger.LogWarning("Deleting catalog with ID: {ItemId}", itemId);
+                _logger.LogWarning("Deleting catalog with ID: {Id}", Id);
                 // Slet kataloget
-                await _service.DeleteCatalog(itemId);
+                await _service.DeleteCatalog(Id);
 
                 // Slet den tilknyttede extended catalog
 
@@ -96,7 +96,7 @@ namespace CatalogService.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while deleting catalog with ID: {ItemId}", itemId);
+                _logger.LogError(ex, "An error occurred while deleting catalog with ID: {Id}", Id);
                 return NotFound(ex.Message);
             }
         }
