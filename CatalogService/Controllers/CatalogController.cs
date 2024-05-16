@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using CatalogService.Repository;
+using CatalogService.Exceptions;
 using Models;
 
 namespace CatalogService.Controllers
@@ -39,8 +40,10 @@ namespace CatalogService.Controllers
                 }
                 else
                 {
+
                     _logger.LogWarning("Item with ID: {Id} not found", Id);
                     return NotFound("Item not found."); // Returnerer 404 NotFound
+
                 }
             }
             catch (Exception ex)
@@ -54,11 +57,24 @@ namespace CatalogService.Controllers
         [HttpPost]
         public async Task<IActionResult> createItem(Catalog newItem)
         {
-            _logger.LogInformation("Creating new item in catalog");
+            //Checks if item == null
             if (newItem == null)
             {
                 _logger.LogWarning("Item cannot be null");
                 return BadRequest("Item cannot be null");
+            }
+            // Checks for invalid inputs
+            if (string.IsNullOrWhiteSpace(newItem.Name) || newItem.Price < 0)
+            {
+                _logger.LogWarning("Invalid item data");
+                return BadRequest("Invalid item data");
+            }
+            // Check if the item already exists
+            var existingItem = await _service.getSpecificItem(newItem.ItemId);
+            if (existingItem != null)
+            {
+                _logger.LogWarning("Item with ID {ItemId} already exists", newItem.ItemId);
+                return Conflict("Item already exists");
             }
 
             await _service.CreateCatalog(newItem);
@@ -87,17 +103,26 @@ namespace CatalogService.Controllers
             try
             {
                 _logger.LogWarning("Deleting catalog with ID: {Id}", Id);
+
+                // Check if the item exists
+                var existingItem = await _service.getSpecificItem(itemId);
+
+
+                if (existingItem == null)
+                {
+                    _logger.LogError("Catalog not found with ID: {Id}", Id);
+                    return NotFound("Catalog not found");
+                }
+
                 // Slet kataloget
                 await _service.DeleteCatalog(Id);
-
-                // Slet den tilknyttede extended catalog
 
                 return Ok("Catalog and associated ExtendedCatalog deleted successfully.");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while deleting catalog with ID: {Id}", Id);
-                return NotFound(ex.Message);
+                return StatusCode(500, "An error occurred while processing your request.");
             }
         }
 
