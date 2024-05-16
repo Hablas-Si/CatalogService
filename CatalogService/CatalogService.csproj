@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CatalogService.Exceptions\CatalogService.Exceptions.csproj" />
+    
   </ItemGroup>
 
 </Project>

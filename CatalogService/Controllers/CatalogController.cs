@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using CatalogService.Repository;
-using CatalogService.Exceptions;
 using Models;
 
 namespace CatalogService.Controllers
@@ -64,16 +63,16 @@ namespace CatalogService.Controllers
                 return BadRequest("Item cannot be null");
             }
             // Checks for invalid inputs
-            if (string.IsNullOrWhiteSpace(newItem.Name) || newItem.Price < 0)
+            if (string.IsNullOrWhiteSpace(newItem.Title) || newItem.Price < 0)
             {
                 _logger.LogWarning("Invalid item data");
                 return BadRequest("Invalid item data");
             }
             // Check if the item already exists
-            var existingItem = await _service.getSpecificItem(newItem.ItemId);
+            var existingItem = await _service.getSpecificItem(newItem.Id);
             if (existingItem != null)
             {
-                _logger.LogWarning("Item with ID {ItemId} already exists", newItem.ItemId);
+                _logger.LogWarning("Item with ID {ItemId} already exists", newItem.Id);
                 return Conflict("Item already exists");
             }
 
@@ -105,7 +104,7 @@ namespace CatalogService.Controllers
                 _logger.LogWarning("Deleting catalog with ID: {Id}", Id);
 
                 // Check if the item exists
-                var existingItem = await _service.getSpecificItem(itemId);
+                var existingItem = await _service.getSpecificItem(Id);
 
 
                 if (existingItem == null)
