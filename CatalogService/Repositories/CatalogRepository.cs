@@ -46,12 +46,12 @@ namespace CatalogService.Repository
         }
 
 
-        public async Task<Catalog> getSpecificItem(int itemId)
+        public async Task<Catalog> getSpecificItem(Guid Id)
         {
             try
             {
                 // Søg efter vareelement (item) baseret på itemId
-                var catalogItem = await _catalogCollection.Find(c => c.ItemId == itemId).FirstOrDefaultAsync();
+                var catalogItem = await _catalogCollection.Find(c => c.Id == Id).FirstOrDefaultAsync();
                 if (catalogItem == null)
                 {
                     throw new Exception();
@@ -66,12 +66,12 @@ namespace CatalogService.Repository
         }
 
 
-        public async Task DeleteCatalog(int itemId)
+        public async Task DeleteCatalog(Guid Id)
         {
             try
             {
                 // Find det katalog, der skal slettes baseret på ItemId
-                var filter = Builders<Catalog>.Filter.Eq(c => c.ItemId, itemId);
+                var filter = Builders<Catalog>.Filter.Eq(c => c.Id, Id);
 
                 // Slet kataloget
                 await _catalogCollection.DeleteOneAsync(filter);
@@ -82,23 +82,20 @@ namespace CatalogService.Repository
                 throw new Exception("An error occurred while deleting the catalog.", ex);
             }
         }
-        public async Task UpdateCatalog(int itemId, Catalog updatedItem)
+        public async Task UpdateCatalog(Guid Id, Catalog updatedItem)
         {
             try
             {
                 // Opret filter til at finde det katalogelement, der skal opdateres
-                var filter = Builders<Catalog>.Filter.Eq(c => c.ItemId, itemId);
+                var filter = Builders<Catalog>.Filter.Eq(c => c.Id, Id);
 
                 // Opret opdatering med de opdaterede oplysninger, inklusive den udvidede kataloginfo
                 var update = Builders<Catalog>.Update
-                    .Set(c => c.Name, updatedItem.Name)
+                    .Set(c => c.Title, updatedItem.Title)
                     .Set(c => c.Description, updatedItem.Description)
                     .Set(c => c.Price, updatedItem.Price)
-                    .Set(c => c.ExtendedCatalog.SoldDate, updatedItem.ExtendedCatalog.SoldDate)
-                    .Set(c => c.ExtendedCatalog.AuctionAdmin, updatedItem.ExtendedCatalog.AuctionAdmin)
-                    .Set(c => c.ExtendedCatalog.Seller, updatedItem.ExtendedCatalog.Seller)
-                    .Set(c => c.ExtendedCatalog.Buyer, updatedItem.ExtendedCatalog.Buyer);
-
+                    .Set(c => c.ProductAvailable, updatedItem.ProductAvailable)
+                    .Set(c => c.Seller, updatedItem.Seller);
                 // Udfør opdateringen i MongoDB
                 await _catalogCollection.UpdateOneAsync(filter, update);
             }

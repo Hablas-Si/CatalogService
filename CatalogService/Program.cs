@@ -14,10 +14,9 @@ Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration) // Konfigurér Serilog fra appsettings.json
     .CreateLogger();
 Console.WriteLine("Serilog initialized.");
-
-
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
+
 
 // BsonSeralizer... fortæller at hver gang den ser en Guid i alle entiteter skal den serializeres til en string. 
 BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
@@ -26,8 +25,6 @@ BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
 builder.Services.Configure<MongoDBSettings>(options =>
 {
     options.ConnectionURI = Environment.GetEnvironmentVariable("ConnectionURI");
-    options.DatabaseName = Environment.GetEnvironmentVariable("DatabaseName");
-    options.CatalogCollectionName = Environment.GetEnvironmentVariable("CatalogCollectionName");
 });
 
 builder.Services.AddSingleton<ICatalogRepository, CatalogRepository>();
