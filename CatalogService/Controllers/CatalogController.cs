@@ -69,12 +69,12 @@ namespace CatalogService.Controllers
                 return BadRequest("Invalid item data");
             }
             // Check if the item already exists
-            var existingItem = await _service.getSpecificItem(newItem.Id);
-            if (existingItem != null)
-            {
-                _logger.LogWarning("Item with ID {ItemId} already exists", newItem.Id);
-                return Conflict("Item already exists");
-            }
+            //var existingItem = await _service.getSpecificItem(newItem.Id);
+            //if (existingItem != null)
+            //{
+            //    _logger.LogWarning("Item with ID {ItemId} already exists", newItem.Id);
+            //    return Conflict("Item already exists");
+            //}
 
             await _service.CreateCatalog(newItem);
             return Ok(newItem);
