@@ -14,16 +14,6 @@ logger.Debug("init main");
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Console.WriteLine("Initializing Serilog...");
-// Log.Logger = new LoggerConfiguration()
-//     .ReadFrom.Configuration(builder.Configuration) // Konfigurér Serilog fra appsettings.json
-//     .CreateLogger();
-
-
-// Console.WriteLine("Serilog initialized.");
-// builder.Host.UseSerilog((context, configuration) =>
-//     configuration.ReadFrom.Configuration(context.Configuration));
-
 builder.Logging.ClearProviders();
 builder.Host.UseNLog();
 
