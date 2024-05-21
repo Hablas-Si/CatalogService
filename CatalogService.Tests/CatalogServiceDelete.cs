@@ -30,11 +30,11 @@ namespace CatalogService.Tests.CatalogGetService
         public async Task DeleteCatalog_WithValidItemId_ReturnsOkResult()
         {
             // Arrange
-            int itemId = 123; // Valid item ID
-            _itemServiceMock.Setup(service => service.getSpecificItem(itemId)).ReturnsAsync(new Catalog {});
+            Guid ID = Guid.NewGuid(); // Valid item ID
+            _itemServiceMock.Setup(service => service.getSpecificItem(ID)).ReturnsAsync(new Catalog {});
 
             // Act
-            var result = await _controller.DeleteCatalog(itemId) as OkObjectResult;
+            var result = await _controller.DeleteCatalog(ID) as OkObjectResult;
 
             // Assert
             Assert.IsNotNull(result);
@@ -45,11 +45,11 @@ namespace CatalogService.Tests.CatalogGetService
         public async Task DeleteCatalog_WithInvalidItemId_ReturnsNotFoundResult()
         {
             // Arrange
-            int itemId = 123; // Invalid item ID
-            _itemServiceMock.Setup(service => service.getSpecificItem(itemId)).ReturnsAsync((Catalog)null);
+            Guid ID = Guid.NewGuid(); // Valid item ID
+            _itemServiceMock.Setup(service => service.getSpecificItem(ID)).ReturnsAsync((Catalog)null);
 
             // Act
-            var result = await _controller.DeleteCatalog(itemId) as NotFoundObjectResult;
+            var result = await _controller.DeleteCatalog(ID) as NotFoundObjectResult;
 
             // Assert
             Assert.IsNotNull(result);
