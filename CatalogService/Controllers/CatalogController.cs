@@ -68,7 +68,7 @@ namespace CatalogService.Controllers
                 _logger.LogWarning("Invalid item data");
                 return BadRequest("Invalid item data");
             }
-       
+
             await _service.CreateCatalog(newItem);
             return Ok(newItem);
         }

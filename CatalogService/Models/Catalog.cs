@@ -11,6 +11,10 @@ namespace Models
         public bool? ProductAvailable { get; set; }
         public string? Seller { get; set; }
 
+        public Catalog()
+        {
+
+        }
     }
 
 }
