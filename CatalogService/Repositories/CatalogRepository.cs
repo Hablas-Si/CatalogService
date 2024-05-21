@@ -61,7 +61,7 @@ namespace CatalogService.Repository
             }
             catch (Exception ex)
             {
-                throw; // Kast undtagelsen videre, hvis kataloget ikke blev fundet
+                throw new Exception(); // Kast undtagelsen videre, hvis kataloget ikke blev fundet
             }
         }
 
