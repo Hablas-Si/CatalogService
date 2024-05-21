@@ -29,7 +29,7 @@ namespace CatalogService.Tests.CatalogGetService
         public async Task CreateItem_WithValidItem_ReturnsOkResult()
         {
             // Arrange
-            var newItem = new Catalog { Id = Guid.NewGuid(), ItemId = 123, Name = "Valid Item", Price = 10.5m };
+            var newItem = new Catalog { Id = Guid.NewGuid(), Title = "Valid Item", Price = 10 };
 
             // Act
             var result = await _controller.createItem(newItem) as OkObjectResult;
@@ -57,7 +57,7 @@ namespace CatalogService.Tests.CatalogGetService
         public async Task CreateItem_WithInvalidItem_ReturnsBadRequest()
         {
             // Arrange
-            var invalidItem = new Catalog { Id = Guid.NewGuid(), ItemId = 7, Name = "", Price = -1.0m };
+            var invalidItem = new Catalog { Id = Guid.NewGuid(), Title = "", Price = (float)-1.50m };
 
             // Act
             var result = await _controller.createItem(invalidItem) as BadRequestObjectResult;
@@ -67,20 +67,21 @@ namespace CatalogService.Tests.CatalogGetService
             Assert.AreEqual("Invalid item data", result.Value);
         }
 
-        [TestMethod]
-        public async Task CreateItem_WithExistingItem_ReturnsConflict()
-        {
-            // Arrange
-            var existingItem = new Catalog { Id = Guid.NewGuid(), ItemId = 123, Name = "Existing Item", Price = 20.0m };
-            _itemServiceMock.Setup(service => service.getSpecificItem(existingItem.ItemId)).ReturnsAsync(existingItem);
+        //Bruger ikke længere
+        // [TestMethod]
+        // public async Task CreateItem_WithExistingItem_ReturnsConflict()
+        // {
+        //     // Arrange
+        //     var existingItem = new Catalog { Id = Guid.NewGuid(), Title = "Existing Item", Price = 20};
+        //     _itemServiceMock.Setup(service => service.getSpecificItem(existingItem.Id)).ReturnsAsync(existingItem);
 
-            // Act
-            var result = await _controller.createItem(existingItem) as ConflictObjectResult;
+        //     // Act
+        //     var result = await _controller.createItem(existingItem) as ConflictObjectResult;
 
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Item already exists", result.Value);
-        }
+        //     // Assert
+        //     Assert.IsNotNull(result);
+        //     Assert.AreEqual("Item already exists", result.Value);
+        // }
 
 
     }
