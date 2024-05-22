@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Models;
 using Moq;
 using Microsoft.Extensions.Logging;
-using CatalogService.Repository;
+using CatalogService.Repositories;
 using MongoDB.Bson;
 using CatalogService.Exceptions;
 
@@ -16,14 +16,17 @@ namespace CatalogService.Tests.CatalogGetService
     {
         private CatalogController _controller;
         private static Mock<ICatalogRepository> _itemServiceMock;
+
+        private static Mock<IVaultRepository> _vaultServiceMock;
         //private List<Catalog> _items;
 
         [TestInitialize]
         public void Setup()
         {
             _itemServiceMock = new Mock<ICatalogRepository>();
+            _vaultServiceMock = new Mock<IVaultRepository>();
             var loggerMock = new Mock<ILogger<CatalogController>>();
-            _controller = new CatalogController(loggerMock.Object, _itemServiceMock.Object);
+            _controller = new CatalogController(loggerMock.Object, _itemServiceMock.Object, _vaultServiceMock.Object);
             //_items bruger vi vidst ikke længere, men er i tvivl om vi brugte det under TDD?
             //_items = new List<Catalog> {
             //    new Catalog { Id = Guid.NewGuid(), Name = "Item 1", Price = 10, Description = "Description 1"},
