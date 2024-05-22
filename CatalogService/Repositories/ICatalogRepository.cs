@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Models;
 
-namespace CatalogService.Repository
+namespace CatalogService.Repositories
 {
     public interface ICatalogRepository
     {

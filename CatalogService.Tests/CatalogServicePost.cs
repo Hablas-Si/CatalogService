@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Models;
 using Moq;
 using Microsoft.Extensions.Logging;
-using CatalogService.Repository;
+using CatalogService.Repositories;
 using MongoDB.Bson;
 using CatalogService.Exceptions;
 
@@ -16,13 +16,15 @@ namespace CatalogService.Tests.CatalogGetService
     {
         private CatalogController _controller;
         private Mock<ICatalogRepository> _itemServiceMock;
+        private Mock<IVaultRepository> _vaultServiceMock;
 
         [TestInitialize]
         public void Setup()
         {
             _itemServiceMock = new Mock<ICatalogRepository>();
+            _vaultServiceMock = new Mock<IVaultRepository>();
             var loggerMock = new Mock<ILogger<CatalogController>>();
-            _controller = new CatalogController(loggerMock.Object, _itemServiceMock.Object);
+            _controller = new CatalogController(loggerMock.Object, _itemServiceMock.Object, _vaultServiceMock.Object);
         }
 
         [TestMethod]

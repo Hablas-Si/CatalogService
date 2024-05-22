@@ -1,8 +1,5 @@
 version: "3.8"
 
-networks:
-  loki:
-
 services:
   loki:
     image: grafana/loki
@@ -10,11 +7,22 @@ services:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
     networks:
-      - loki
+      - my_network
 
   grafana:
     image: grafana/grafana:latest
     ports:
       - "3000:3000"
     networks:
-      - loki
+      - my_network
+
+  catalogservicetest:
+    image: chilinhm/catalogservicetest-image:latest
+    ports:
+      - "5125:8080"
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
