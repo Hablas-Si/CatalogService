@@ -12,7 +12,7 @@ namespace CatalogService.Repository
 
         public CatalogRepository(IOptions<MongoDBSettings> mongoDBSettings)
         {
-            MongoClient client = new MongoClient(mongoDBSettings.Value.ConnectionURI);
+            MongoClient client = new MongoClient(mongoDBSettings.Value.ConnectionAuctionDB);
             IMongoDatabase database = client.GetDatabase(mongoDBSettings.Value.DatabaseName);
             _catalogCollection = database.GetCollection<Catalog>(mongoDBSettings.Value.CatalogCollectionName);
         }
@@ -61,7 +61,7 @@ namespace CatalogService.Repository
             }
             catch (Exception ex)
             {
-                throw; // Kast undtagelsen videre, hvis kataloget ikke blev fundet
+                throw new Exception(); // Kast undtagelsen videre, hvis kataloget ikke blev fundet
             }
         }
 

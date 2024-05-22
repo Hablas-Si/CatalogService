@@ -7,17 +7,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.5" />
     <PackageReference Include="MongoDB.Bson" Version="2.25.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.25.0" />
     <PackageReference Include="moq" Version="4.20.70" />
+    <PackageReference Include="NLog" Version="5.3.2" />
+    <PackageReference Include="NLog.Targets.Loki" Version="2.2.0" />
+    <PackageReference Include="NLog.Web" Version="5.3.11" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.11" />
     <PackageReference Include="Serilog" Version="3.1.1" />
     <PackageReference Include="Serilog.aspnetcore" Version="8.0.1" />
     <PackageReference Include="Serilog.Sinks.Grafana.Loki" Version="8.3.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <None Include="NLog.config"> 
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    <PackageReference Include="VaultSharp" Version="1.13.0.1" />  
   </ItemGroup>
 
-  <ItemGroup>
-    
-  </ItemGroup>
-
+  
 </Project>
