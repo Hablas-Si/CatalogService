@@ -12,7 +12,7 @@ namespace CatalogService.Repository
 
         public CatalogRepository(IOptions<MongoDBSettings> mongoDBSettings)
         {
-            MongoClient client = new MongoClient(mongoDBSettings.Value.ConnectionURI);
+            MongoClient client = new MongoClient(mongoDBSettings.Value.ConnectionAuctionDB);
             IMongoDatabase database = client.GetDatabase(mongoDBSettings.Value.DatabaseName);
             _catalogCollection = database.GetCollection<Catalog>(mongoDBSettings.Value.CatalogCollectionName);
         }

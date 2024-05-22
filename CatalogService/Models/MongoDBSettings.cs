@@ -7,7 +7,7 @@ namespace Models
 {
     public class MongoDBSettings
     {
-        public string ConnectionURI { get; set; } = "mongodb+srv://admin:admin@auctionhouse.dfo2bcd.mongodb.net/";
+        public string ConnectionAuctionDB { get; set; } = null!;
         public string DatabaseName { get; set; } = "Catalog";
         public string CatalogCollectionName { get; set; } = "Catalog";
     }

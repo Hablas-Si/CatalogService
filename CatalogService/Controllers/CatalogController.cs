@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using CatalogService.Repository;
 using Models;
+using CatalogService.Repositories;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace CatalogService.Controllers
 {
@@ -10,14 +13,17 @@ namespace CatalogService.Controllers
     {
         private readonly ILogger<CatalogController> _logger;
         private readonly ICatalogRepository _service;
+        private readonly IVaultRepository _vaultService;
 
-        public CatalogController(ILogger<CatalogController> logger, ICatalogRepository service)
+
+        public CatalogController(ILogger<CatalogController> logger, ICatalogRepository service, IVaultRepository vaultservice)
         {
             _logger = logger;
-            this._service = service;
+            _service = service;
+            _vaultService = vaultservice;
         }
 
-        [HttpGet("all")]
+        [HttpGet("all"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> getAll()
         {
             _logger.LogInformation("Fetching all items from catalog");
@@ -26,7 +32,7 @@ namespace CatalogService.Controllers
         }
 
 
-        [HttpGet("{Id}")]
+        [HttpGet("{Id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> getSpecificItem(Guid Id)
         {
             _logger.LogInformation("Fetching item with ID: {Id}", Id);
@@ -53,7 +59,7 @@ namespace CatalogService.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Admin")]
         public async Task<IActionResult> createItem(Catalog newItem)
         {
             //Checks if item == null
@@ -73,7 +79,7 @@ namespace CatalogService.Controllers
             return Ok(newItem);
         }
 
-        [HttpPut("{Id}")]
+        [HttpPut("{Id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCatalogAndExtended(Guid Id, Catalog updatedCatalog)
         {
             _logger.LogInformation("Updating catalog and extended catalog with ID: {Id}", Id);
@@ -84,12 +90,13 @@ namespace CatalogService.Controllers
                 return Ok("Catalog and ExtendedCatalog updated successfully.");
             }
             catch (Exception ex)
-            {   _logger.LogError(ex, "An error occurred while updating catalog and extended catalog with ID: {Id}", Id);
+            {
+                _logger.LogError(ex, "An error occurred while updating catalog and extended catalog with ID: {Id}", Id);
                 return NotFound(ex.Message);
             }
         }
 
-        [HttpDelete("{Id}")]
+        [HttpDelete("{Id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCatalog(Guid Id)
         {
             try
@@ -119,6 +126,40 @@ namespace CatalogService.Controllers
         }
 
 
+        //TEST ENVIRONMENT
+        // OBS: TIlføj en Authorize attribute til metoderne nedenunder Kig ovenfor i jwt token creation.
+        [HttpGet("authorized"), Authorize(Roles = "Admin")]
+        public IActionResult Authorized()
+        {
+
+            // Hvis brugeren har en gyldig JWT-token og rollen "Admin", vil denne metode blive udført
+            return Ok("You are authorized to access this resource.");
+        }
+
+        // En get der henter secrets ned fra vault
+        [AllowAnonymous]
+        [HttpGet("getsecret/{path}")]
+        public async Task<IActionResult> GetSecret(string path)
+        {
+            try
+            {
+                _logger.LogInformation($"Getting secret with path {path}");
+                var secretValue = await _vaultService.GetSecretAsync(path);
+                if (secretValue != null)
+                {
+                    return Ok(secretValue);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error retrieving secret: {ex}");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving secret.");
+            }
+        }
 
 
 
