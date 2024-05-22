@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using CatalogService.Repository;
-using Models;
 using CatalogService.Repositories;
+using Models;
 using Microsoft.AspNetCore.Authorization;
 
 

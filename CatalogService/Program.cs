@@ -1,11 +1,10 @@
 using Models;
-using CatalogService.Repository;
+using CatalogService.Repositories;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Bson;
 using NLog;
 using NLog.Web;
-using CatalogService.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;

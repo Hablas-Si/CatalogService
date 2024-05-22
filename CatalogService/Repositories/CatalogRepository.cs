@@ -4,7 +4,7 @@ using Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace CatalogService.Repository
+namespace CatalogService.Repositories
 {
     public class CatalogRepository : ICatalogRepository
     {
