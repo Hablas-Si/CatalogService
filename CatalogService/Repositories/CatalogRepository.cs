@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using MongoDB.Bson;
 
 namespace CatalogService.Repositories
 {
@@ -70,11 +71,9 @@ namespace CatalogService.Repositories
         {
             try
             {
-                // Find det katalog, der skal slettes baseret på ItemId
-                var filter = Builders<Catalog>.Filter.Eq(c => c.Id, Id);
-
-                // Slet kataloget
-                await _catalogCollection.DeleteOneAsync(filter);
+                // Find katalogelementet, der skal slettes
+                var removeCatalog = _catalogCollection.Find(c => c.Id == Id).FirstOrDefault().ToBsonDocument();
+                await _catalogCollection.DeleteOneAsync(removeCatalog);
             }
             catch (Exception ex)
             {

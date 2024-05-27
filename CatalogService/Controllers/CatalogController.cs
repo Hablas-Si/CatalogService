@@ -120,7 +120,7 @@ namespace CatalogService.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while deleting catalog with ID: {Id}", Id);
-                return StatusCode(500, "An error occurred while processing your request.");
+                return NotFound(ex);
             }
         }
 
