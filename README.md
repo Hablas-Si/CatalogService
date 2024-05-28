@@ -35,13 +35,6 @@ API'et er dokumenteret ved hjælp af Swagger, og du kan få adgang til dokumenta
 https://localhost:{port}/swagger
 
 
-Erstat `{port}` med den port, som API'et kører på (standardporten er normalt 5072).
+Erstat `{port}` med den port, som API'et kører på (standardporten er normalt 5072 ellers port 4000 for NGINX).
 
-## Bidrag
-
-Bidrag er velkomne! Hvis du ønsker at bidrage til projektet, opret en pull-anmodning med dine ændringer eller åbn en problemrapport med eventuelle problemer, du finder.
-
-## Licens
-
-Dette projekt er under [MIT-licensen](LICENSE).
 # CatalogService# CatalogService
